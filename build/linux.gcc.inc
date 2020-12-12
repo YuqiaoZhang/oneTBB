@@ -73,7 +73,13 @@ ifeq ($(cfg), debug)
 endif
 
 CPLUS_FLAGS += $(ITT_NOTIFY) -DUSE_PTHREAD -pthread
-LIB_LINK_FLAGS += -pthread
+LIB_LINK_FLAGS += -pthread -Wl,--no-undefined
+
+CPLUS_FLAGS += -D_GLIBCXX_USE_CXX11_ABI=0 -static-libgcc -static-libstdc++
+LIB_LINK_FLAGS += -static-libgcc -static-libstdc++
+
+RPATH_ORIGIN_FLAG = '-Wl,-rpath,$$ORIGIN'
+LIB_LINK_FLAGS += $(RPATH_ORIGIN_FLAG) -Wl,--enable-new-dtags
 
 TBB_ASM.OBJ=
 MALLOC_ASM.OBJ=

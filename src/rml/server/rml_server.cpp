@@ -3194,19 +3194,6 @@ void init_rml_module () {
 }
 
 extern "C" factory::status_type __RML_open_factory( factory& f, version_type& server_version, version_type client_version ) {
-    // Hack to keep this library from being closed by causing the first client's dlopen to not have a corresponding dlclose.
-    // This code will be removed once we figure out how to do shutdown of the RML perfectly.
-    static tbb::atomic<bool> one_time_flag;
-    if( one_time_flag.compare_and_swap(true,false)==false) {
-        __TBB_ASSERT( (size_t)f.library_handle!=factory::c_dont_unload, NULL );
-#if _WIN32||_WIN64
-        f.library_handle = reinterpret_cast<HMODULE>(factory::c_dont_unload);
-#else
-        f.library_handle = reinterpret_cast<void*>(factory::c_dont_unload);
-#endif
-    }
-    // End of hack
-
     // Initialize the_balance only once
     tbb::internal::atomic_do_once ( &init_rml_module, rml_module_state );
 

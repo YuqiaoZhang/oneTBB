@@ -39,7 +39,6 @@ CPLUS_FLAGS += $(PIC_KEY) $(DSE_KEY) $(DEFINE_KEY)__TBB_BUILD=1
 TBB_CPLUS.OBJ = concurrent_hash_map.$(OBJ) \
 		concurrent_queue.$(OBJ) \
 		concurrent_vector.$(OBJ) \
-		dynamic_link.$(OBJ) \
 		itt_notify.$(OBJ) \
 		cache_aligned_allocator.$(OBJ) \
 		pipeline.$(OBJ) \
@@ -98,14 +97,11 @@ endif
 tbbvars.sh:
 	$(MAKE_TBBVARS)
 
+LIB_LINK_FLAGS += -L. -lpt_tbbmalloc -lpt_irml
+
 $(TBB.DLL): BUILDING_LIBRARY = $(TBB.DLL)
 $(TBB.DLL): $(TBB.OBJ) $(TBB.RES) tbbvars.sh $(TBB_NO_VERSION.DLL)
 	$(LIB_LINK_CMD) $(LIB_OUTPUT_KEY)$(TBB.DLL) $(TBB.OBJ) $(TBB.RES) $(LIB_LINK_LIBS) $(LIB_LINK_FLAGS)
-
-ifneq (,$(TBB_NO_VERSION.DLL))
-$(TBB_NO_VERSION.DLL):
-	echo "INPUT ($(TBB.DLL))" > $(TBB_NO_VERSION.DLL)
-endif
 
 #clean:
 #	$(RM) *.$(OBJ) *.$(DLL) *.res *.map *.ilk *.pdb *.exp *.manifest *.tmp *.d core core.*[0-9][0-9] *.ver

@@ -38,18 +38,6 @@ extern "C" factory::status_type __RML_open_factory(factory& f, version_type& /*s
         return factory::st_incompatible;
     }
 
-    // Hack to keep this library from being closed
-    static tbb::atomic<bool> one_time_flag;
-    if( one_time_flag.compare_and_swap(true,false)==false ) {
-        __TBB_ASSERT( (size_t)f.library_handle!=factory::c_dont_unload, NULL );
-#if _WIN32||_WIN64
-        f.library_handle = reinterpret_cast<HMODULE>(factory::c_dont_unload);
-#else
-        f.library_handle = reinterpret_cast<void*>(factory::c_dont_unload);
-#endif
-    }
-    // End of hack
-
     return factory::st_success;
 }
 
