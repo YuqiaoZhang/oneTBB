@@ -1,0 +1,18 @@
+name: Ubuntu 18.04 LTS
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: install ubuntu dependencies
+        run: sudo ./.vscode/install_ubuntu_dependencies.sh
+      - name: build ubuntu 
+        run: ./.vscode/build.sh
